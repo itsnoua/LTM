@@ -11,6 +11,32 @@ const getAllTask = async (req, res) => {
     }
 }
 
+const getByStatus = (req, res) => {
+  try {
+    const allStatus = ["completed", "Pending", "In Progress"];
+
+    if (req.params.status === undefined) {
+      return res.status(400).json({ error: "Missing status parameter" });
+    }
+
+    if (!allStatus.includes(req.params.status)) {
+      return res.status(404).json({ error: `Invalid status: ${req.params.status}` });
+    }
+
+    const task = readFile();
+
+    const foundTasks = Object.entries(task).filter(
+      ([_, taskData]) => taskData.status === req.params.status
+    );
+
+    return res.status(200).json({ data: foundTasks });
+  } catch (error) {
+    res.status(500).json({ error: "Internal server error" });
+  }
+};
+
+  
+
 // get by id 
 const getTaskById = async (req, res) =>{
     try{
